@@ -1,0 +1,89 @@
+% Parameter settings
+T = 0.001557806567041489; % Rotation period of the pulsar (seconds)
+cycles = 5; % Total number of cycles
+time_steps = 1000; % Number of time steps
+time = linspace(0, cycles * T, time_steps); % Time axis
+theta = 2 * pi * mod(time / T, 1); % Pulsar's angular position (cycles from 0 to 2π)
+
+% Observer angle settings
+observer_angle = pi/3; % Angle of the observer
+beam_width = pi/6; % Beam radiation angle width
+
+% Signal intensity (considering two beams)
+beam1_intensity = exp(-((theta - observer_angle).^2) / (2 * (beam_width/2)^2)); % Beam 1
+beam2_intensity = exp(-((mod(theta + pi, 2*pi) - observer_angle).^2) / (2 * (beam_width/2)^2)); % Beam 2
+signal_intensity = beam1_intensity + beam2_intensity; % Total signal intensity
+
+% Observer position
+observer_radius = 2; % Radius of the observer from the pulsar center
+observer_x = observer_radius * cos(observer_angle);
+observer_y = observer_radius * sin(observer_angle);
+observer_z = 0;
+
+% Create a VideoWriter object
+videoFilename = 'pulsar_dual_beam_with_observer.mp4';
+v = VideoWriter(videoFilename, 'MPEG-4');
+v.FrameRate = 30;
+open(v);
+
+% Dynamically render and record video
+figure('Color', 'black');
+for t = 1:time_steps
+    % Upper part: Display of pulsar and radiation
+    subplot(2,1,1);
+    hold off;
+    % Draw the pulsar
+    [x, y, z] = sphere(20);
+    surf(x, y, z, 'FaceColor', 'magenta', 'EdgeColor', 'none');
+    axis equal;
+    axis([-2, 2, -2, 2, -2, 2]);
+    hold on;
+
+    % Beam parameters
+    beam_length = 2; % Beam length
+    beam_angle = beam_width / 2;
+    cone_x = [0, beam_length*cos(-beam_angle), beam_length*cos(beam_angle)];
+    cone_y = [0, beam_length*sin(-beam_angle), beam_length*sin(beam_angle)];
+    cone_z = [0, 0, 0];
+
+    % Rotation of Beam 1
+    rot_mat1 = [cos(theta(t)) -sin(theta(t)); sin(theta(t)) cos(theta(t))];
+    beam_pos1 = rot_mat1 * [cone_x; cone_y];
+    fill3(beam_pos1(1,:), beam_pos1(2,:), cone_z, 'yellow', 'FaceAlpha', 0.5);
+
+    % Rotation of Beam 2 (opposite to Beam 1)
+    rot_mat2 = [cos(theta(t) + pi) -sin(theta(t) + pi); sin(theta(t) + pi) cos(theta(t) + pi)];
+    beam_pos2 = rot_mat2 * [cone_x; cone_y];
+    fill3(beam_pos2(1,:), beam_pos2(2,:), cone_z, 'cyan', 'FaceAlpha', 0.5);
+
+    % Draw the observer
+    scatter3(observer_x, observer_y, observer_z, 200, 'blue', 'filled');
+    text(observer_x, observer_y, observer_z -0.6, 'observer', 'Color', 'white', 'FontSize', 10, 'HorizontalAlignment', 'left');
+
+    % Adjust viewing angle
+    view([45, 20]);
+    title('Pulsar Rotation with Dual Beams and Observer', 'Color', 'white');
+    set(gca, 'Color', 'black', 'XColor', 'none', 'YColor', 'none', 'ZColor', 'none');
+
+    % Lower part: Signal intensity plot
+    subplot(2,1,2);
+    plot(time(1:t), signal_intensity(1:t), 'y', 'LineWidth', 2);
+    hold on;
+    scatter(time(t), signal_intensity(t), 100, 'red', 'filled');
+    xlabel('Time (s)', 'Color', 'white');
+    ylabel('Signal Intensity', 'Color', 'white');
+    title('Signal Received', 'Color', 'white');
+    set(gca, 'Color', 'black', 'XColor', 'white', 'YColor', 'white');
+    xlim([0, max(time)]);
+    ylim([0, 2]);
+    grid on;
+
+    % Write to video
+    frame = getframe(gcf);
+    writeVideo(v, frame);
+end
+
+% Close video object
+close(v);
+
+disp(['Video saved to ', videoFilename]);
