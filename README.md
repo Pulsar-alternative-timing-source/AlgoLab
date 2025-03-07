@@ -14,6 +14,7 @@ Review of potential research direction [1], comparation with other time synchron
 https://www.mdpi.com/1996-1073/18/4/828
 
 [2] Liu, Yu, Biao Sun, Yuru Wu, Yongxin Zhang, Jiahui Yang, Wen Wang, Naga Lakshmi Thotakura, Qian Liu, and Yilu Liu. "Time Synchronization Techniques in the Modern Smart Grid: A Comprehensive Survey." Energies 18, no. 5 (2025): 1163.
+
 https://www.mdpi.com/1996-1073/18/5/1163
 
 
