@@ -19,3 +19,6 @@ https://www.mdpi.com/1996-1073/18/5/1163
 [3]
 https://drive.google.com/file/d/1HVklV7pNmrkU8WsxBtKtAU8cTIT_McYs/view?usp=sharing
 
+[4] Y. Zhang, Y. Wu, Y. Liu, J. Yang, N. L. Thotakura and Y. Liu, "Pulsar Movement Animation and its Corresponding Signal Visualization for Timing Source," 2025 IEEE Workshop on Power Electronics and Power Quality Applications (PEPQA), Cartagena, Colombia, 2025, pp. 1-6, doi: 10.1109/PEPQA66960.2025.11073319.
+https://ieeexplore.ieee.org/document/11073319
+
